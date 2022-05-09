@@ -1,11 +1,18 @@
 from datetime import datetime
 from bot import db
+from sqlalchemy.orm import relationship
+from sqlalchemy import MetaData
+from sqlalchemy import Table, Column, Integer, String
 
+class Sneaker():
 
-class User():
+    __tablename__ = 'sneaker'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(30))
+    fullname = Column(String)
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
+       return f"User(id={self.id!r}, name={self.name!r}, fullname={self.fullname!r})"
 
 
 class Post():
