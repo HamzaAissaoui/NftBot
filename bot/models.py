@@ -5,20 +5,20 @@ from sqlalchemy.orm import declarative_base
 from sqlalchemy import create_engine, event
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session
+from sqlalchemy import select
 
 Base = declarative_base()
 '''Comments before every execution'''
 @event.listens_for(Engine, "before_cursor_execute")
 def comment_sql_calls(conn, cursor, statement, parameters,
                                     context, executemany):
-    print('executing: ' + statement + ' with parameters: ' + str(parameters))
+    print('executing: ' + statement)
 
 '''Creating an engine'''
 engine = create_engine("postgresql+psycopg2://postgres:postgres@localhost:5432/postgres", echo=False, future=True)
 db = Session(engine)
 
-class Sneaker():
-
+class Sneaker(Base):
     __tablename__ = 'sneaker'
     id = Column(Integer, primary_key=True)
     sneaker_id = Column(String(40))
@@ -32,7 +32,7 @@ class Sneaker():
            attributes_sum={self.attributes_sum!r}, price={self.price!r})"
 
 
-class Attributes():
+class Attributes(Base):
     __tablename__ = 'attributes'
     id = Column(Integer, primary_key=True)
     min_attribute_sum = Column(Float(3))
@@ -44,7 +44,7 @@ class Attributes():
             cheapest_average_price={self.cheapest_average_price!r})"
 
 
-class BoughtSneaker():
+class BoughtSneaker(Base):
     __tablename__ = 'bought_sneaker'
     id = Column(Integer, primary_key=True)
     sneaker_id = Column(String(40))
@@ -57,3 +57,19 @@ class BoughtSneaker():
 def create_tables():
     Base.metadata.create_all(engine, checkfirst=True)
 
+def fill_attributes_table():
+    min_ = 0.1
+    max_ = 1
+    with db as session:
+        while max_ <= 30:
+            attribute = Attributes(min_attribute_sum=min_, max_attribute_sum=max_, total_sneakers=0, cheapest_average_price=0)
+            session.add(attribute)
+            session.commit()
+            min_+=1
+            max_+=1
+    
+def get_attributes_ids():
+    with db as session:
+        for row in session.scalars(select(Attributes).filter_by(id=1)):
+                print(row) 
+            

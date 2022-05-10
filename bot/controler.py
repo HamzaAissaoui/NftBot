@@ -1,7 +1,7 @@
 import redis
 import time
 from celery import Task
-from bot.models import Sneaker, Attributes, BoughtSneaker, create_tables, db
+from models import Sneaker, Attributes, BoughtSneaker, create_tables, db, fill_attributes_table
 REDIS_CLIENT = redis.Redis()
 
 def only_one(function=None, key="", timeout=None):
@@ -28,8 +28,9 @@ def only_one(function=None, key="", timeout=None):
 
     return _dec(function) if function is not None else _dec
 
-create_tables()
-
+# Execute once
+# create_tables()
+# fill_attributes_table()
 class SingleTask(Task):
     @only_one(key="SingleTask", timeout=60*30)
     def run(self, **kwargs):
