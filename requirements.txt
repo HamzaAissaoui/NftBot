@@ -1,2 +1,4 @@
 SQLAlchemy
 psycopg2
+Appium-Python-Client
+selenium

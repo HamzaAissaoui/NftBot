@@ -1,21 +1,30 @@
 from datetime import datetime
-from sqlalchemy.orm import relationship
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import create_engine, event
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session
 from sqlalchemy import select
+from helper import logger
+from config.settings import Settings
 
 Base = declarative_base()
 '''Comments before every execution'''
 @event.listens_for(Engine, "before_cursor_execute")
 def comment_sql_calls(conn, cursor, statement, parameters,
                                     context, executemany):
-    print('executing: ' + statement)
+    logger.warning(statement)
 
 '''Creating an engine'''
-engine = create_engine("postgresql+psycopg2://postgres:postgres@localhost:5432/postgres", echo=False, future=True)
+engine = create_engine(     
+                        f"""
+                        {Settings.get_db_ORDBMS()}+{Settings.get_db_interpreter()}://\
+                        {Settings.get_db_user()}:{Settings.get_db_password()}@\
+                        {Settings.get_db_host()}:{Settings.get_db_port()}/\
+                        {Settings.get_db_name()}
+                        """, echo=False, future=True
+                    )
+
 db = Session(engine)
 
 class Sneaker(Base):
@@ -51,8 +60,18 @@ class BoughtSneaker(Base):
     buying_price = Column(Float(5))
     selling_price = Column(Float(5))
     def __repr__(self):
-       return f"Bought Sneaker(id={self.id!r}, sneaker_id={self.sneaker_id!r}, buying_price={self.buying_price!r}, selling_price={self.selling_price!r})"    
+       return f"BoughtSneaker(id={self.id!r}, sneaker_id={self.sneaker_id!r}, buying_price={self.buying_price!r}, selling_price={self.selling_price!r})"    
 
+
+class ScrappingStatus(Base):
+    __tablename__ = 'scrapping_status'
+    id = Column(Integer, primary_key=True)
+    last_scrapped = Column(DateTime)
+    finished_scrapping = Column(Boolean)
+    def __repr__(self):
+       return f"ScrappingStatus(id={self.id!r}, last_scrapped={self.last_scrapped!r}, finished_scrapping={self.finished_scrapping!r})"    
+
+    
 
 def create_tables():
     Base.metadata.create_all(engine, checkfirst=True)
@@ -73,3 +92,10 @@ def get_attributes_ids():
         for row in session.scalars(select(Attributes).filter_by(id=1)):
                 print(row) 
             
+def fill_scrapping_status():
+    with db as session:
+        attribute = ScrappingStatus(last_scrapped=datetime.now(), finished_scrapping=False)
+        session.add(attribute)
+        session.commit()
+
+        

@@ -1,9 +1,9 @@
 from celery import Celery
 from celery.utils.log import get_task_logger
-from bot.controler import SingleTask
+from main import SingleTask
+from config.settings import Settings
 
-app = Celery('bot', broker="amqp://guest:guest@localhost:5672//")
-app.conf.timezone = 'UTC'
+app = Celery('bot', broker=Settings.get_celery_broker())
 logger = get_task_logger(__name__)
 
 @app.task
