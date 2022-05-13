@@ -35,35 +35,35 @@ class Settings:
 
 
     @classmethod
-    def get_celery_broker(cls, session_id):
+    def get_celery_broker(cls):
         return cls.get_setting("CELERY_BROKER", "amqp://guest:guest@localhost:5672//")
 
     @classmethod
-    def get_db_name(cls, session_id):
+    def get_db_name(cls):
         return cls.get_setting("DB_NAME", "postgres")
 
     @classmethod
-    def get_db_user(cls, session_id):
+    def get_db_user(cls):
         return cls.get_setting("DB_USER", "postgres")
 
 
     @classmethod
-    def get_db_password(cls, session_id):
+    def get_db_password(cls):
         return cls.get_setting("DB_PASS", "postgres")
 
     @classmethod
-    def get_db_host(cls, session_id):
+    def get_db_host(cls):
         return cls.get_setting("DB_HOST", "localhost")
 
     @classmethod
-    def get_db_port(cls, session_id):
+    def get_db_port(cls):
         return cls.get_setting("DB_PORT", "5432")
 
     @classmethod
-    def get_db_ORDBMS(cls, session_id):
+    def get_db_ORDBMS(cls):
         return cls.get_setting("ORDBMS", "postgresql")
     
 
     @classmethod
-    def get_db_interpreter(cls, session_id):
+    def get_db_interpreter(cls):
         return cls.get_setting("DB_INTERPRETER", "psycopg2")

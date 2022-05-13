@@ -1,6 +1,8 @@
 # NftBot
 A bot that buys and sells Nfts with a profit margin, it consists of 3 parts
-
+- To launch the bot:
+    - open a terminal window and run: celery -A bot beat --loglevel=info
+    - Open a second terminal window and run: celery -A bot worker --loglevel=info 
 
 1. Scrapping:
     - Every 3-5 hours, the bot will:

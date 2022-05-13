@@ -1,9 +1,8 @@
-from time import sleep
-from appium import webdriver
+from bot.config.settings import Settings
+from appium.webdriver import webdriver
 from selenium.webdriver.common.by import By
-from config.settings import Settings
-from helper import logger
-from models import Sneaker, Attributes, BoughtSneaker, db
+from bot.helper import logger
+from time import sleep
 
 desired_cap ={
     "platformName": Settings.get_platform_name(),
@@ -17,25 +16,26 @@ desired_cap ={
     "skipDeviceInitialization": True,
     "fullReset":False
 }
-android_driver = webdriver.Remote(Settings.get_server_url(), desired_cap)
+android_driver = webdriver.WebDriver(Settings.get_server_url(),desired_cap)
 SESSION_BASE_URI = Settings.session_base_uri(android_driver.session_id)
 
-class Android:
-
+class mobileController:
+    
     driver = android_driver
-
-    def scrap_sneakers(self):
-        self.restart_app()
-        #Put scrapping here
+        
+    def filter_search(self, shoe_mint_number):
+        pass
 
     def restart_app(self):
         try:
             self.driver.close_app()
-            sleep(1)
-            self.driver.launch_app()
         except:
-            logger.error('Cannot Restart App!')
+            logger.warning('App is already closed!')
+        sleep(1)
+        self.driver.launch_app()
     
+
+
     def hand_tap(self, xcoord, ycoord, move_pause=1500, click_pause = 300):
         return {
                 "actions":

@@ -5,24 +5,19 @@ from sqlalchemy import create_engine, event
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from helper import logger
-from config.settings import Settings
+from bot.helper import logger
+from bot.config.settings import Settings
 
 Base = declarative_base()
 '''Comments before every execution'''
 @event.listens_for(Engine, "before_cursor_execute")
 def comment_sql_calls(conn, cursor, statement, parameters,
                                     context, executemany):
-    logger.warning(statement)
+    logger.info(statement)
 
 '''Creating an engine'''
 engine = create_engine(     
-                        f"""
-                        {Settings.get_db_ORDBMS()}+{Settings.get_db_interpreter()}://\
-                        {Settings.get_db_user()}:{Settings.get_db_password()}@\
-                        {Settings.get_db_host()}:{Settings.get_db_port()}/\
-                        {Settings.get_db_name()}
-                        """, echo=False, future=True
+                        f"{Settings.get_db_ORDBMS()}+{Settings.get_db_interpreter()}://{Settings.get_db_user()}:{Settings.get_db_password()}@{Settings.get_db_host()}:{Settings.get_db_port()}/{Settings.get_db_name()}", echo=False, future=True
                     )
 
 db = Session(engine)
