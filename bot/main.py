@@ -6,7 +6,7 @@ from redis.lock import Lock
 from celery import Task
 from bot.models import Sneaker, Attributes, BoughtSneaker, ScrappingStatus, create_tables, db, fill_attributes_table, fill_scrapping_status
 from bot.helper import  diff_more_than_3_hours
-from bot.scripts.mobileView import mobileView
+from bot.androidBot.mobileView import mobileView
 from sqlalchemy import select
 from bot.helper import logger
 

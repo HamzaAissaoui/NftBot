@@ -1,7 +1,7 @@
 from time import sleep
 from bot.helper import logger
 from bot.models import Sneaker, Attributes, BoughtSneaker, db
-from bot.scripts.mobileController import mobileController
+from bot.androidBot.mobileController import mobileController
 
 
 controller = mobileController()

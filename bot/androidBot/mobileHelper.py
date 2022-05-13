@@ -1,8 +1,6 @@
+import random
 from bot.config.settings import Settings
 from appium.webdriver import webdriver
-from selenium.webdriver.common.by import By
-from bot.helper import logger
-from time import sleep
 
 desired_cap ={
     "platformName": Settings.get_platform_name(),
@@ -16,27 +14,14 @@ desired_cap ={
     "skipDeviceInitialization": True,
     "fullReset":False
 }
-android_driver = webdriver.WebDriver(Settings.get_server_url(),desired_cap)
-SESSION_BASE_URI = Settings.session_base_uri(android_driver.session_id)
-
-class mobileController:
-    
-    driver = android_driver
-        
-    def filter_search(self, shoe_mint_number):
-        pass
-
-    def restart_app(self):
-        try:
-            self.driver.close_app()
-        except:
-            logger.warning('App is already closed!')
-        sleep(1)
-        self.driver.launch_app()
-    
+driver = webdriver.WebDriver(Settings.get_server_url(),desired_cap)
+driver.implicitly_wait(20)
+SESSION_BASE_URI = Settings.session_base_uri(driver.session_id)
 
 
-    def hand_tap(self, xcoord, ycoord, move_pause=1500, click_pause = 300):
+def hand_tap(xcoord, ycoord):
+        move_pause = random.randint(500, 750)
+        click_pause = random.randint(250, 400)
         return {
                 "actions":
                 [
@@ -69,7 +54,10 @@ class mobileController:
                 ]
             }
 
-    def scroll_by_coords(self, ystart=500, yend=100, xcoord = 400, pause=250, pointermove1=300, pointermove2=750):
+def scroll_by_coords(ystart=500, yend=100, xcoord = 400):
+            pause = random.randint(200, 350)
+            pointermove1 = random.randint(250, 350)
+            pointermove2 = random.randint(450, 750)
             return {
                 "actions":
                     [
@@ -109,3 +97,6 @@ class mobileController:
                         }
                     ]
             }
+
+
+
