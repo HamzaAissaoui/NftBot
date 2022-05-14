@@ -27,6 +27,7 @@ def random_sleep(inf=0.5, sup=2.5):
     sleep(delay)
 
 def hand_tap(xcoord, ycoord):
+        random_sleep(0.5, 2)
         move_pause = random.randint(500, 750)
         click_pause = random.randint(250, 400)
         return {
@@ -61,7 +62,8 @@ def hand_tap(xcoord, ycoord):
                 ]
             }
 
-def scroll_by_coords(ystart=500, yend=100, xcoord = 400):
+def swipe_by_coords(ystart=500, yend=100, xstart = 400, xend=400):
+            random_sleep(0.5, 2)
             pause = random.randint(200, 350)
             pointermove1 = random.randint(250, 350)
             pointermove2 = random.randint(450, 750)
@@ -78,7 +80,7 @@ def scroll_by_coords(ystart=500, yend=100, xcoord = 400):
                                     {
                                         "type":"pointerMove",
                                         "duration":pointermove1,
-                                        "x":xcoord,
+                                        "x":xstart,
                                         "y":ystart
                                     },
                                     {
@@ -93,7 +95,7 @@ def scroll_by_coords(ystart=500, yend=100, xcoord = 400):
                                         "type":"pointerMove",
                                         "duration":pointermove2,
                                         "origin":"viewport",
-                                        "x":xcoord,
+                                        "x":xend,
                                         "y":yend
                                     },
                                     {

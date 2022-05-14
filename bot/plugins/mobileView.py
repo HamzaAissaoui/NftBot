@@ -7,7 +7,7 @@ controller = mobileController()
 class mobileView:
 
     def scrap_sneakers(self):
-        for i in range(3):
+        for i in range(2,-1,-1):
             controller.restart_app()
             controller.filter_search(i)
 
