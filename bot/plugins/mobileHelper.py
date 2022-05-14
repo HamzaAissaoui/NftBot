@@ -1,6 +1,8 @@
 import random
 from bot.config.settings import Settings
 from appium.webdriver import webdriver
+from random import uniform
+from time import sleep
 
 desired_cap ={
     "platformName": Settings.get_platform_name(),
@@ -18,6 +20,11 @@ driver = webdriver.WebDriver(Settings.get_server_url(),desired_cap)
 driver.implicitly_wait(20)
 SESSION_BASE_URI = Settings.session_base_uri(driver.session_id)
 
+def random_sleep(inf=0.5, sup=3.0):
+    MIN_INF = 0.3
+    delay = uniform(inf, sup)
+    delay = max(delay, MIN_INF)
+    sleep(delay)
 
 def hand_tap(xcoord, ycoord):
         move_pause = random.randint(500, 750)
