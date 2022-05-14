@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import create_engine, event
 from sqlalchemy.engine import Engine
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy import select
 from bot.core.log import logger
 from bot.config.settings import Settings
@@ -20,7 +20,7 @@ engine = create_engine(
                         f"{Settings.get_db_ORDBMS()}+{Settings.get_db_interpreter()}://{Settings.get_db_user()}:{Settings.get_db_password()}@{Settings.get_db_host()}:{Settings.get_db_port()}/{Settings.get_db_name()}", echo=False, future=True
                     )
 
-db = Session(engine)
+Session = sessionmaker(bind=engine)
 
 class Sneaker(Base):
     __tablename__ = 'sneaker'
@@ -74,7 +74,7 @@ def create_tables():
 def fill_attributes_table():
     min_ = 0.1
     max_ = 1
-    with db as session:
+    with Session() as session:
         while max_ <= 30:
             attribute = Attributes(min_attribute_sum=min_, max_attribute_sum=max_, total_sneakers=0, cheapest_average_price=0)
             session.add(attribute)
@@ -83,12 +83,12 @@ def fill_attributes_table():
             max_+=1
     
 def get_attributes_ids():
-    with db as session:
+    with Session() as session:
         for row in session.scalars(select(Attributes).filter_by(id=1)):
                 print(row) 
             
 def fill_scrapping_status():
-    with db as session:
+    with Session() as session:
         attribute = ScrappingStatus(last_scrapped=datetime.now(), finished_scrapping=False)
         session.add(attribute)
         session.commit()

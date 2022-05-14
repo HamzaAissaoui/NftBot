@@ -20,7 +20,7 @@ class FiltersPage:
                 1: "29%, 2",
                 0: "14%, 1"
             }
-            startX, yCoord = driver.find_element_by_accessibility_id(startMap[value]).location.values()
+            startX, yCoord = driver.find_element_by_accessibility_id("100%, 7").location.values()
             endMap = {
                 2: 505,
                 1: 410,
