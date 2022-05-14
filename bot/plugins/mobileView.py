@@ -1,5 +1,4 @@
-from time import sleep
-from bot.helper import logger
+from bot.core.log import logger
 from bot.models import Sneaker, Attributes, BoughtSneaker, db
 from bot.plugins.mobileController import mobileController
 

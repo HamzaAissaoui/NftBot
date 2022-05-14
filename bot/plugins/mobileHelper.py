@@ -18,9 +18,9 @@ desired_cap ={
 }
 driver = webdriver.WebDriver(Settings.get_server_url(),desired_cap)
 driver.implicitly_wait(20)
-SESSION_BASE_URI = Settings.session_base_uri(driver.session_id)
+session_uri = Settings.session_base_uri(driver.session_id)
 
-def random_sleep(inf=0.5, sup=3.0):
+def random_sleep(inf=0.5, sup=2.5):
     MIN_INF = 0.3
     delay = uniform(inf, sup)
     delay = max(delay, MIN_INF)

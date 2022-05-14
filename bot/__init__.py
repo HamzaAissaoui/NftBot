@@ -2,7 +2,8 @@ from celery import Celery
 from celery.utils.log import get_task_logger
 from bot.main import SingleTask
 from bot.config.settings import Settings
-from bot.helper import logger
+from bot.core.log import logger
+import logging
 
 app = Celery('bot', broker=Settings.get_celery_broker())
 

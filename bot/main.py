@@ -8,7 +8,7 @@ from bot.models import Sneaker, Attributes, BoughtSneaker, ScrappingStatus, crea
 from bot.helper import  diff_more_than_3_hours
 from bot.plugins.mobileView import mobileView
 from sqlalchemy import select
-from bot.helper import logger
+from bot.core.log import logger
 
 android = mobileView()
 REDIS_CLIENT = redis.Redis()
@@ -28,8 +28,6 @@ def only_one(function=None, key="", timeout=None):
                 is_locked = Lock(REDIS_CLIENT, key).locked()
                 if have_lock:
                     run_func(*args, **kwargs)
-                else:
-                    logger.info('scrapping running, this might take a while..')
                     
             finally:
                 if have_lock:

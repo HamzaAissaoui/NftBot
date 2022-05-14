@@ -5,7 +5,7 @@ from sqlalchemy import create_engine, event
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from bot.helper import logger
+from bot.core.log import logger
 from bot.config.settings import Settings
 
 Base = declarative_base()
