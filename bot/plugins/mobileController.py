@@ -1,7 +1,7 @@
 
 from time import sleep
-from bot.core.log import logger
-from bot.plugins.mobileCommands import Commands
+from core.log import logger
+from plugins.mobileCommands import Commands
 from mobileHelper import driver, random_sleep
 from pages import Pages
 

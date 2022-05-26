@@ -1,5 +1,5 @@
 import random
-from bot.config.settings import Settings
+from config.settings import Settings
 from appium.webdriver import webdriver
 from random import uniform
 from time import sleep

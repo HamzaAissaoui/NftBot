@@ -1,16 +1,17 @@
 from datetime import datetime
-import imp
 from time import sleep
 import redis
 from redis.lock import Lock
 from celery import Task
-from bot.models import Sneaker, Attributes, BoughtSneaker, ScrappingStatus, create_tables, Session, fill_attributes_table, fill_scrapping_status
-from bot.helper import  diff_more_than_3_hours
-from bot.plugins.mobileView import mobileView
+from models import Sneaker, Attributes, BoughtSneaker, ScrappingStatus, create_tables, Session, fill_attributes_table, fill_scrapping_status
+from helper import diff_more_than_3_hours
+from plugins.mobileView import mobileView
 from sqlalchemy import select
-from bot.core.log import logger
-from bot.plugins.mobileHelper import driver
+from core.log import logger
+from plugins.mobileHelper import driver
+
 REDIS_CLIENT = redis.Redis()
+
 
 def only_one(function=None, key="", timeout=None):
     """Enforce only one celery task at a time."""
@@ -27,7 +28,7 @@ def only_one(function=None, key="", timeout=None):
                 is_locked = Lock(REDIS_CLIENT, key).locked()
                 if have_lock:
                     run_func(*args, **kwargs)
-                    
+
             finally:
                 if have_lock:
                     lock.release()
@@ -39,23 +40,23 @@ def only_one(function=None, key="", timeout=None):
 # Execute once
 # create_tables()
 # fill_attributes_table()
-#fill_scrapping_status()
+# fill_scrapping_status()
 
 
 class SingleTask(Task):
     @only_one(key="SingleTask", timeout=60 * 30)
     def run(self, **kwargs):
-        #Set the scraping date to now and the finishedscrapping to false at first, once we finish we set it to true
-        #From the second time and onward we check if the difference between last scrapping and now is more than 3 hours or if finishedscrapping is false, if it's true:
-        #We update scraping date to now and we put finishedscrapping to false then we start scrapping
-        #once done we put finished scrapping to true and we ignore it for the next 3 hours or so
+        # Set the scraping date to now and the finishedscrapping to false at first, once we finish we set it to true
+        # From the second time and onward we check if the difference between last scrapping and now is more than 3 hours or if finishedscrapping is false, if it's true:
+        # We update scraping date to now and we put finishedscrapping to false then we start scrapping
+        # once done we put finished scrapping to true and we ignore it for the next 3 hours or so
         with Session() as session:
             android = mobileView(session)
             scrapping_status = session.scalars(select(ScrappingStatus)).first()
-            if scrapping_status.finished_scrapping == False or diff_more_than_3_hours(datetime.now(), scrapping_status.last_scrapped): 
+            if scrapping_status.finished_scrapping == False or diff_more_than_3_hours(datetime.now(), scrapping_status.last_scrapped):
                 android.scrap_sneakers()
                 # scrapping_status.last_scrapped = datetime.now()
                 # scrapping_status.finished_scrapping = True
                 # session.commit()
-        
+
             driver.quit()

@@ -1,5 +1,5 @@
-from bot.core.log import logger
-from bot.plugins.mobileController import mobileController
+from core.log import logger
+from plugins.mobileController import mobileController
 
 controller = mobileController()
 

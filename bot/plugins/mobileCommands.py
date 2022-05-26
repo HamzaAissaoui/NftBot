@@ -1,7 +1,7 @@
 import requests
 from selenium.webdriver.common.by import By
-from mobileHelper import hand_tap, swipe_by_coords, session_uri, driver,random_sleep
-from bot.core.log import logger
+from plugins.mobileHelper import hand_tap, swipe_by_coords, session_uri, driver,random_sleep
+from core.log import logger
 class Commands:        
     
     @classmethod
