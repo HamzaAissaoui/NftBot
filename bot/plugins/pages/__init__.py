@@ -1,5 +1,6 @@
-import filters, marketplace
+from .filters import FiltersPage
+from .marketplace import MarketplacePage
 
 class Pages:
-    Filters = filters.FiltersPage
-    Marketplace = marketplace.MarketplacePage
+    Filters = FiltersPage
+    Marketplace = MarketplacePage

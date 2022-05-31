@@ -1,5 +1,8 @@
 import os
 import requests
+from dotenv import load_dotenv
+load_dotenv()
+
 
 class Settings:
     @classmethod
@@ -18,6 +21,10 @@ class Settings:
         return cls.get_setting("DEVICE_NAME", "Android Emulator")
 
     @classmethod
+    def get_wait_activity(cls):
+        return cls.get_setting("APP_WAIT_ACTIVITY", "Test")
+
+    @classmethod
     def get_app_package(cls):
         return cls.get_setting("APP_PACKAGE", "com.test.mobile")
 
@@ -28,11 +35,10 @@ class Settings:
     @classmethod
     def get_actions_url(cls):
         return cls.get_setting("SERVER_URL", "http://localhost:8226/wd/hub")
-    
+
     @classmethod
     def session_base_uri(cls, session_id):
-        return cls.get_server_url() +'/session/%s' % session_id
-
+        return cls.get_server_url() + '/session/%s' % session_id
 
     @classmethod
     def get_celery_broker(cls):
@@ -45,7 +51,6 @@ class Settings:
     @classmethod
     def get_db_user(cls):
         return cls.get_setting("DB_USER", "postgres")
-
 
     @classmethod
     def get_db_password(cls):
@@ -62,7 +67,6 @@ class Settings:
     @classmethod
     def get_db_ORDBMS(cls):
         return cls.get_setting("ORDBMS", "postgresql")
-    
 
     @classmethod
     def get_db_interpreter(cls):

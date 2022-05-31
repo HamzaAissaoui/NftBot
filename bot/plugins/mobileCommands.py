@@ -6,13 +6,14 @@ class Commands:
     
     @classmethod
     def open_marketplace(cls):
-        logger.info('opening marketplace.')
         random_sleep()
+        logger.info('opening marketplace.')
         requests.post(session_uri+'/actions', json = hand_tap(900, 2150), headers = {'Content-Type': "application/json"})  
         
     @classmethod
     def skip_notice(cls):
-        random_sleep()
+        random_sleep(3, 5)
+        logger.info('skipping notice.')
         requests.post(session_uri+'/actions', json = hand_tap(1050, 2180), headers = {'Content-Type': "application/json"})  
 
         

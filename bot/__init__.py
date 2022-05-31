@@ -4,6 +4,7 @@ from bot.main import SingleTask
 from config.settings import Settings
 from core.log import logger
 import logging
+
 app = Celery('bot', broker=Settings.get_celery_broker())
 @app.task
 def my_task():

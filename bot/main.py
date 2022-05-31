@@ -9,6 +9,7 @@ from plugins.mobileView import mobileView
 from sqlalchemy import select
 from core.log import logger
 from plugins.mobileHelper import driver
+from plugins.test import filter_by
 
 REDIS_CLIENT = redis.Redis()
 
@@ -50,8 +51,8 @@ class SingleTask(Task):
         # From the second time and onward we check if the difference between last scrapping and now is more than 3 hours or if finishedscrapping is false, if it's true:
         # We update scraping date to now and we put finishedscrapping to false then we start scrapping
         # once done we put finished scrapping to true and we ignore it for the next 3 hours or so
-        with Session() as session:
-            android = mobileView(session)
+        with Session as session:
+            android = mobileView()
             scrapping_status = session.scalars(select(ScrappingStatus)).first()
             if scrapping_status.finished_scrapping == False or diff_more_than_3_hours(datetime.now(), scrapping_status.last_scrapped):
                 android.scrap_sneakers()
@@ -60,3 +61,20 @@ class SingleTask(Task):
                 # session.commit()
 
             driver.quit()
+
+if __name__ == '__main__':
+    try:
+        with Session as session:
+            android = mobileView()
+            scrapping_status = session.query(ScrappingStatus).first() 
+            if not scrapping_status.finished_scrapping or diff_more_than_3_hours(datetime.now(), scrapping_status.last_scrapped):
+                logger.info('started scrapping sneakers.')
+                android.scrap_sneakers()
+                # scrapping_status.last_scrapped = datetime.now()
+                # scrapping_status.finished_scrapping = True
+                # session.commit()
+
+                driver.quit()   
+    except Exception as e:
+        print(e.args[0])
+        driver.quit()
