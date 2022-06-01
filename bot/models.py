@@ -12,10 +12,10 @@ Base = declarative_base()
 '''Comments before every execution'''
 
 
-@event.listens_for(Engine, "before_cursor_execute")
-def comment_sql_calls(conn, cursor, statement, parameters,
-                      context, executemany):
-    logger.info(statement)
+# @event.listens_for(Engine, "before_cursor_execute")
+# def comment_sql_calls(conn, cursor, statement, parameters,
+#                       context, executemany):
+#     logger.info(statement)
 
 
 '''Creating an engine'''

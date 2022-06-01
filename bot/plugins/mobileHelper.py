@@ -4,6 +4,7 @@ from appium.webdriver import webdriver
 from random import uniform
 from time import sleep
 from core.log import logger
+import requests
 
 desired_cap = {
     "platformName": Settings.get_platform_name(),
@@ -19,6 +20,15 @@ desired_cap = {
 driver = webdriver.WebDriver(Settings.get_server_url(), desired_cap)
 driver.implicitly_wait(5)
 session_uri = Settings.session_base_uri(driver.session_id)
+Settingsdata = {
+    'settings': {
+        'waitForIdleTimeout': 100,
+        'ignoreUnimportantViews': True,
+        'waitForSelectorTimeout': 3500
+    }
+}
+requests.post(session_uri+'/appium/settings', json=Settingsdata,
+              headers={'Content-Type': "application/json"})
 
 
 def random_sleep(inf=1.5, sup=3):

@@ -30,9 +30,11 @@ class mobileController:
             5. scroll down and repeat"""
             Pages.Marketplace.scroll_next_page(pageNum)
             sneakersInView = Pages.Marketplace.get_unsaved_sneakers_in_view()
-            print('Reached End')
+            logger.info('opening unsaved sneakers')
             for sneakerElement in sneakersInView:
-                print(sneakerElement.get_attribute("content-desc"))
+                sneakerElement.click()
+                Pages.Sneaker.scrap_sneaker()
+                driver.back()
 
     def restart_app(self):
         random_sleep()

@@ -12,19 +12,22 @@ class MarketplacePage:
     def scroll_next_page(cls, pageNum):
         if pageNum == 0:
             return
+
         # Scrolling down to the next page
+        logger.info('scrolling to next page of sneakers')
         requests.post(session_uri+'/actions', json=swipe_by_coords(2000,
                       300), headers={'Content-Type': "application/json"})
+        random_sleep(2.5, 4.5)
 
     @classmethod
     def get_unsaved_sneakers_in_view(cls):
         random_sleep()
         sneakersList = driver.find_elements(
             By.XPATH, '//android.view.View[contains(@content-desc, "Walker")]')
+        unsavedSneakers = []
         for sneakerElement in sneakersList:
             sneakerDescription = sneakerElement.get_attribute("content-desc")
             sneakerID = cls.getSneakerId(sneakerDescription)
-            unsavedSneakers = []
             if cls.checkSneakerNonExistant(sneakerID):
                 unsavedSneakers.append(sneakerElement)
         return unsavedSneakers

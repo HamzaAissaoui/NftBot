@@ -9,7 +9,6 @@ from plugins.mobileView import mobileView
 from sqlalchemy import select
 from core.log import logger
 from plugins.mobileHelper import driver
-from plugins.test import filter_by
 
 REDIS_CLIENT = redis.Redis()
 

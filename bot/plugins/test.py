@@ -1,6 +1,7 @@
 from plugins.mobileHelper import driver, session_uri, hand_tap, swipe_by_coords
 from selenium.webdriver.common.by import By
 import requests
+from .pages import Pages
 
 def getSneakerId(description : str):
     """Returns the Sneaker ID which is after the # symbol"""
@@ -18,7 +19,7 @@ def get_sneakers_ids():
     driver.quit()
 
     
-def filter_by(filterName, value):
+def test_filter_by(filterName, value):
         if filterName != 'Shoe mint':
             driver.find_element(By.XPATH, value = f'//android.view.View[@content-desc="{value}"]').click()
 
@@ -40,3 +41,18 @@ def filter_by(filterName, value):
 
             #Confirm Button
             requests.post(session_uri+'/actions', json = hand_tap(630, 2170), headers = {'Content-Type': "application/json"})  
+
+def test_scrap_pages(numberPages):
+        for pageNum in range(0, numberPages):
+            """
+            1. Get sneakers infos
+            2. for each one check if their ID exists in the database
+            3. if it does not exist, open it and save its information
+            4. if it exists skip it
+            5. scroll down and repeat"""
+            Pages.Marketplace.scroll_next_page(pageNum)
+            sneakersInView = Pages.Marketplace.get_unsaved_sneakers_in_view()
+            print('Reached End')
+            exit(0)            
+            for sneakerElement in sneakersInView:
+                print(sneakerElement.get_attribute("content-desc"))
