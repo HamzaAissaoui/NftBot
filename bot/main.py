@@ -63,6 +63,9 @@ class SingleTask(Task):
 
 if __name__ == '__main__':
     try:
+        from plugins import test
+        test.test_scrap_pages(1)
+        exit(1)
         with Session as session:
             android = mobileView()
             scrapping_status = session.query(ScrappingStatus).first() 

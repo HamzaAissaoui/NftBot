@@ -29,7 +29,7 @@ class MarketplacePage:
             sneakerDescription = sneakerElement.get_attribute("content-desc")
             sneakerID = cls.getSneakerId(sneakerDescription)
             if cls.checkSneakerNonExistant(sneakerID):
-                unsavedSneakers.append(sneakerElement)
+                unsavedSneakers.append({'element':sneakerElement, 'sneaker_id': sneakerID})
         return unsavedSneakers
 
     @classmethod

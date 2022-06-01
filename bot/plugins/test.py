@@ -53,6 +53,9 @@ def test_scrap_pages(numberPages):
             Pages.Marketplace.scroll_next_page(pageNum)
             sneakersInView = Pages.Marketplace.get_unsaved_sneakers_in_view()
             print('Reached End')
-            exit(0)            
-            for sneakerElement in sneakersInView:
-                print(sneakerElement.get_attribute("content-desc"))
+            for sneakerElement in sneakersInView[1:2]:
+                sneakerElement['element'].click()
+                infos = Pages.Sneaker.scrapSneaker(sneakerElement['sneaker_id'])
+                print(infos)
+                driver.back()
+   

@@ -31,11 +31,13 @@ requests.post(session_uri+'/appium/settings', json=Settingsdata,
               headers={'Content-Type': "application/json"})
 
 
-def random_sleep(inf=1.5, sup=3):
+def random_sleep(inf=1.5, sup=3, message=''):
     MIN_INF = 0.3
     delay = uniform(inf, sup)
     delay = max(delay, MIN_INF)
-    logger.info(f'sleeping for {int(delay)} seconds')
+    if message:
+        message = 'before ' + message
+    logger.info(f'sleeping for {int(delay)} seconds {message}')
     sleep(delay)
 
 

@@ -32,8 +32,8 @@ class mobileController:
             sneakersInView = Pages.Marketplace.get_unsaved_sneakers_in_view()
             logger.info('opening unsaved sneakers')
             for sneakerElement in sneakersInView:
-                sneakerElement.click()
-                Pages.Sneaker.scrap_sneaker()
+                sneakerElement['element'].click()
+                Pages.Sneaker.scrapSneaker(sneakerElement['sneaker_id'])
                 driver.back()
 
     def restart_app(self):
