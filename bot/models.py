@@ -36,6 +36,19 @@ class Sneaker(Base):
     attributes_sum = Column(Float(4))
     price = Column(Float(5))
 
+    @classmethod
+    def deleteOldsneakers(cls):
+        with Session as session:
+            logger.info('deleting old sneakers')
+            query = session.query(Sneaker).order_by(Sneaker.id.desc()).offset(1000)
+            session.query(Sneaker).filter(Sneaker.luck==0, Sneaker.efficiency==0, Sneaker.resilience==0).delete()
+            if query.first() is not None:
+                session.delete(query)
+                logger.info('deleted old sneakers, only latest 1000 left')
+            else:
+                logger.info('number of sneakers less than 1000')
+            session.commit()
+
     def __repr__(self):
         return f"Sneaker(id={self.id!r}, sneaker_id={self.sneaker_id!r}, efficiency={self.efficiency!r}, luck={self.luck!r}, resilience={self.resilience!r},\
            attributes_sum={self.attributes_sum!r}, price={self.price!r})"

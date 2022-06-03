@@ -1,15 +1,12 @@
-from datetime import datetime
-from time import sleep
 import redis
 from redis.lock import Lock
 from celery import Task
-from models import Sneaker, Attributes, BoughtSneaker, ScrappingStatus, create_tables, Session, fill_attributes_table, fill_scrapping_status
-from helper import diff_more_than_3_hours
+from models import Attributes, create_tables, Session, fill_attributes_table, fill_scrapping_status, Sneaker
+from helper import checkScrappingStatus, updateScrappingStatus
 from plugins.mobileView import mobileView
-from sqlalchemy import select
 from core.log import logger
 from plugins.mobileHelper import driver
-
+from sqlalchemy import and_
 REDIS_CLIENT = redis.Redis()
 
 
@@ -46,37 +43,18 @@ def only_one(function=None, key="", timeout=None):
 class SingleTask(Task):
     @only_one(key="SingleTask", timeout=60 * 30)
     def run(self, **kwargs):
-        # Set the scraping date to now and the finishedscrapping to false at first, once we finish we set it to true
-        # From the second time and onward we check if the difference between last scrapping and now is more than 3 hours or if finishedscrapping is false, if it's true:
-        # We update scraping date to now and we put finishedscrapping to false then we start scrapping
-        # once done we put finished scrapping to true and we ignore it for the next 3 hours or so
-        with Session as session:
-            android = mobileView()
-            scrapping_status = session.scalars(select(ScrappingStatus)).first()
-            if scrapping_status.finished_scrapping == False or diff_more_than_3_hours(datetime.now(), scrapping_status.last_scrapped):
-                android.scrap_sneakers()
-                # scrapping_status.last_scrapped = datetime.now()
-                # scrapping_status.finished_scrapping = True
-                # session.commit()
+        finishedScrapping, threeHoursSinceLastScrap = checkScrappingStatus()
+        if not finishedScrapping or threeHoursSinceLastScrap:
+            logger.info('started scrapping sneakers.')
+            mobileView.scrap_sneakers(startFromPage=20, endAtPage=30)
+            updateScrappingStatus()
+        driver.quit()
 
-            driver.quit()
 
 if __name__ == '__main__':
-    try:
-        from plugins import test
-        test.test_scrap_pages(1)
-        exit(1)
-        with Session as session:
-            android = mobileView()
-            scrapping_status = session.query(ScrappingStatus).first() 
-            if not scrapping_status.finished_scrapping or diff_more_than_3_hours(datetime.now(), scrapping_status.last_scrapped):
-                logger.info('started scrapping sneakers.')
-                android.scrap_sneakers()
-                # scrapping_status.last_scrapped = datetime.now()
-                # scrapping_status.finished_scrapping = True
-                # session.commit()
-
-                driver.quit()   
-    except Exception as e:
-        print(e.args[0])
-        driver.quit()
+    finishedScrapping, threeHoursSinceLastScrap = checkScrappingStatus()
+    if not finishedScrapping or threeHoursSinceLastScrap:
+        logger.info('started scrapping sneakers.')
+        mobileView.scrap_sneakers(startFromPage=10, endAtPage=30)
+        updateScrappingStatus()
+    driver.quit()

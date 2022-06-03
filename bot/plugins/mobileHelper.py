@@ -35,14 +35,12 @@ def random_sleep(inf=1.5, sup=3, message=''):
     MIN_INF = 0.3
     delay = uniform(inf, sup)
     delay = max(delay, MIN_INF)
-    if message:
-        message = 'before ' + message
     logger.info(f'sleeping for {int(delay)} seconds {message}')
     sleep(delay)
 
 
 def hand_tap(xcoord, ycoord):
-    random_sleep(0.5, 2)
+    random_sleep(0.5, 2, message='before tapping')
     move_pause = random.randint(500, 750)
     click_pause = random.randint(250, 400)
     return {
@@ -79,7 +77,7 @@ def hand_tap(xcoord, ycoord):
 
 
 def swipe_by_coords(ystart=500, yend=100, xstart=400, xend=400):
-    random_sleep(0.5, 2)
+    random_sleep(0.5, 2, message='before swiping')
     pause = random.randint(400, 800)
     pointermove1 = random.randint(250, 350)
     pointermove2 = random.randint(600, 1200)

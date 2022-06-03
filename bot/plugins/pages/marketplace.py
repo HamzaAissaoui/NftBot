@@ -14,14 +14,14 @@ class MarketplacePage:
             return
 
         # Scrolling down to the next page
-        logger.info('scrolling to next page of sneakers')
+        logger.info(f'scrolling to page {pageNum} of sneakers')
         requests.post(session_uri+'/actions', json=swipe_by_coords(2000,
                       300), headers={'Content-Type': "application/json"})
-        random_sleep(2.5, 4.5)
+        random_sleep(2.5, 4.5, message='while sneakers load')
 
     @classmethod
     def get_unsaved_sneakers_in_view(cls):
-        random_sleep()
+        random_sleep(message='to make sure sneakers are loaded')
         sneakersList = driver.find_elements(
             By.XPATH, '//android.view.View[contains(@content-desc, "Walker")]')
         unsavedSneakers = []
@@ -30,7 +30,16 @@ class MarketplacePage:
             sneakerID = cls.getSneakerId(sneakerDescription)
             if cls.checkSneakerNonExistant(sneakerID):
                 unsavedSneakers.append({'element':sneakerElement, 'sneaker_id': sneakerID})
+            else:
+                logger.warning('sneaker already saved')
         return unsavedSneakers
+
+    @classmethod
+    def rechedEnd(cls, repeatedSneakers, unsavedSneakers):
+        if not unsavedSneakers:
+            return repeatedSneakers+1
+
+
 
     @classmethod
     def checkSneakerNonExistant(cls, sneakerId):

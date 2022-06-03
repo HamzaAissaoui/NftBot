@@ -1,25 +1,21 @@
 import requests
 from selenium.webdriver.common.by import By
-from plugins.mobileHelper import hand_tap, swipe_by_coords, session_uri, driver,random_sleep
+from plugins.mobileHelper import hand_tap, swipe_by_coords, session_uri, driver, random_sleep
 from core.log import logger
-class Commands:        
-    
+
+
+class Commands:
+
     @classmethod
     def open_marketplace(cls):
-        random_sleep()
+        random_sleep(4, 6, message='before opening marketplace')
         logger.info('opening marketplace.')
-        requests.post(session_uri+'/actions', json = hand_tap(900, 2150), headers = {'Content-Type': "application/json"})  
-        
+        requests.post(session_uri+'/actions', json=hand_tap(900, 2150),
+                      headers={'Content-Type': "application/json"})
+
     @classmethod
     def skip_notice(cls):
-        random_sleep(3, 5)
+        random_sleep(3, 5, message='before skipping notice')
         logger.info('skipping notice.')
-        requests.post(session_uri+'/actions', json = hand_tap(1050, 2180), headers = {'Content-Type': "application/json"})  
-
-        
- 
-
-
-
-
-
+        requests.post(session_uri+'/actions', json=hand_tap(1050,
+                      2180), headers={'Content-Type': "application/json"})
