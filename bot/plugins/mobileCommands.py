@@ -19,3 +19,7 @@ class Commands:
         logger.info('skipping notice.')
         requests.post(session_uri+'/actions', json=hand_tap(1050,
                       2180), headers={'Content-Type': "application/json"})
+
+    @classmethod
+    def openSpendingAccount(cls):
+        driver.find_element(By.XPATH, '//android.widget.ImageView[contains(@content-desc, "km")][1]/following-sibling::android.view.View[1]').click()

@@ -37,6 +37,27 @@ class FiltersPage:
             requests.post(session_uri+'/actions', json=swipe_by_coords(1745, 1745,
                           startMap[2], endMap[value]), headers={'Content-Type': "application/json"})
 
-            # Confirm Button
-            requests.post(session_uri+'/actions', json=hand_tap(630,
-                          2170), headers={'Content-Type': "application/json"})
+    @classmethod
+    def filter_shoe_mint(cls, endvalue):
+        random_sleep(2, 4, message='before choosing filter')
+        logger.warning(
+            f'filtering by Shoe Mint from value {endvalue}')
+        startValue = endvalue+1
+        if endvalue == 2:
+            startValue = 0
+
+        Map = {
+            2: 505,
+            1: 410,
+            0: 315
+        }
+
+        # Shoe Mint Value Change
+        requests.post(session_uri+'/actions', json=swipe_by_coords(1745, 1745,
+                                                                   Map[startValue], Map[endvalue]), headers={'Content-Type': "application/json"})
+
+    @classmethod
+    def confirmFilters():
+        # Confirm Button
+        requests.post(session_uri+'/actions', json=hand_tap(630,
+                                                            2170), headers={'Content-Type': "application/json"})

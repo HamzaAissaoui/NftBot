@@ -45,9 +45,10 @@ class SingleTask(Task):
     def run(self, **kwargs):
         finishedScrapping, threeHoursSinceLastScrap = checkScrappingStatus()
         if not finishedScrapping or threeHoursSinceLastScrap:
-            logger.info('started scrapping sneakers.')
-            mobileView.scrap_sneakers(startFromPage=20, endAtPage=30)
+            mobileView.scrap_sneakers(startFromPage=0, endAtPage=30)
             updateScrappingStatus()
+        
+        mobileView.buy_sneakers()
         driver.quit()
 
 
@@ -55,6 +56,6 @@ if __name__ == '__main__':
     finishedScrapping, threeHoursSinceLastScrap = checkScrappingStatus()
     if not finishedScrapping or threeHoursSinceLastScrap:
         logger.info('started scrapping sneakers.')
-        mobileView.scrap_sneakers(startFromPage=10, endAtPage=30)
+        mobileView.scrap_sneakers(startFromPage=0, endAtPage=30)
         updateScrappingStatus()
     driver.quit()

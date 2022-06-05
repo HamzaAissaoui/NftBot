@@ -7,15 +7,21 @@ from models import Session, Sneaker
 class SneakerPage:
     @classmethod
     def scrapSneaker(cls, sneaker_id):
-        logger.info('scrapping sneaker page')
         # Clicking on Base
         random_sleep(4, 5, message='before clicking on Base button')
-        try:
-            driver.find_element(
-                By.XPATH, '//android.view.View[@content-desc="Base"]').click()
-        except:
-            logger.warning('could not open sneaker, skipping')
-            return 'skipped'
+        BaseButtonList = driver.find_elements(
+                By.XPATH, '//android.view.View[@content-desc="Base"]')
+        if BaseButtonList:
+            BaseButtonList[0].click()
+        else:
+            random_sleep(8, 15, message='because sneaker is slow to load')
+            BaseButtonList = driver.find_elements(
+                By.XPATH, '//android.view.View[@content-desc="Base"]')
+            if BaseButtonList:
+                BaseButtonList[0].click()
+            else:
+                logger.warning('could not open sneaker, skipping')
+                return 'skipped'            
             
         price = cls.getPrice()
         efficiency = cls.getAttribute('Efficiency')
@@ -32,6 +38,7 @@ class SneakerPage:
         with Session as session:
             session.add(sneakerToSave)
             session.commit()
+        logger.info(f'sneaker {sneaker_id} saved')
 
     @classmethod
     def getPrice(cls):

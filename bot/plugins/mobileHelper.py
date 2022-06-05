@@ -18,7 +18,7 @@ desired_cap = {
     "skipDeviceInitialization": True
 }
 driver = webdriver.WebDriver(Settings.get_server_url(), desired_cap)
-driver.implicitly_wait(5)
+driver.implicitly_wait(30)
 session_uri = Settings.session_base_uri(driver.session_id)
 Settingsdata = {
     'settings': {

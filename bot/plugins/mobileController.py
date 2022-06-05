@@ -12,19 +12,19 @@ from sqlalchemy import update
 class mobileController:
 
     def filter_search(self, shoe_mint_number):
-        Commands.open_marketplace()
         logger.info('started filtering sneakers.')
         Pages.Filters.open_filters()
         Pages.Filters.filter_by('Type', 'Sneakers')
         Pages.Filters.filter_by('Class', 'Walker')
         Pages.Filters.filter_by('Quality', 'Common')
         Pages.Filters.filter_by('Shoe mint', shoe_mint_number)
+        Pages.Filters.confirmFilters()
         random_sleep(3, 6, message='before starting to scrap')
 
     def scrap_pages(self, startFromPage, endAtPage):
         repeatedSneakers = 0
 
-        #Scrolling to the page we start scrolling from
+        # Scrolling to the page we start scrolling from
         if startFromPage > 1:
             for i in range(0, startFromPage):
                 Pages.Marketplace.scroll_next_page(i)
@@ -46,9 +46,9 @@ class mobileController:
                     'either reached the end or you need to update the starting page and ending page, changing filters or finalizing scrapping')
                 break
 
-            logger.info('opening unsaved sneakers')
+            logger.warning('opening unsaved sneakers')
             for sneakerElement in unsavedSneakers:
-                random_sleep(4, 6, message='before saving next sneaker')
+                random_sleep(3, 6, message='before saving next sneaker')
                 sneakerElement['element'].click()
                 scrappingStatus = Pages.Sneaker.scrapSneaker(
                     sneakerElement['sneaker_id'])
@@ -95,6 +95,25 @@ class mobileController:
                 minAttribute += 1
                 maxAttribute += 1
         logger.info('Finished calculating attributes and cheapest prices')
+
+    def checkBalance(self, currency, minimum):
+        logger.info('checking balance')
+        Commands.openSpendingAccount()
+        balance = Pages.Sneaker.getAttribute(currency)     
+        driver.back()   
+        return float(balance) >= minimum
+
+    def filterBuyingSearch(self, loopIndex, shoe_mint_number):
+        if loopIndex == 0:
+            self.filter_search(shoe_mint_number)
+        else:
+            Pages.Filters.open_filters()
+            Pages.Filters.filter_shoe_mint(shoe_mint_number)
+            Pages.Filters.confirmFilters()
+            random_sleep(1, 3, message='before starting to buy')
+
+    def buyValidSneakers(self, sneakersList):
+        pass
 
     def restart_app(self):
         random_sleep(message='before restarting app')

@@ -14,7 +14,7 @@ class MarketplacePage:
             return
 
         # Scrolling down to the next page
-        logger.info(f'scrolling to page {pageNum} of sneakers')
+        logger.warning(f'scrolling to page {pageNum} of sneakers')
         requests.post(session_uri+'/actions', json=swipe_by_coords(2000,
                       300), headers={'Content-Type': "application/json"})
         random_sleep(2.5, 4.5, message='while sneakers load')
@@ -35,10 +35,19 @@ class MarketplacePage:
         return unsavedSneakers
 
     @classmethod
-    def rechedEnd(cls, repeatedSneakers, unsavedSneakers):
-        if not unsavedSneakers:
-            return repeatedSneakers+1
+    def get_sneakers_in_view_to_buy(cls):
+        random_sleep()
+        sneakersList = driver.find_elements(
+            By.XPATH, '//android.view.View[contains(@content-desc, "Walker")]')
+        return sneakersList
 
+
+    @classmethod
+    def changeOrderFromTo(cls, currentOrder, newOrder):
+        random_sleep(3, 5, 'before opening order list')
+        driver.find_element(By.XPATH, f'//android.widget.ImageView[@content-desc="{currentOrder}"]').click()
+        random_sleep(1, 3, f'before changing order to {newOrder}')
+        driver.find_element(By.XPATH, f'//android.view.View[contains(@content-desc, "{newOrder}")]').click()
 
 
     @classmethod
