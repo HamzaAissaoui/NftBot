@@ -113,7 +113,16 @@ class mobileController:
             random_sleep(1, 3, message='before starting to buy')
 
     def buyValidSneakers(self, sneakersList):
-        pass
+        
+        logger.warning('opening sneakers to buy')
+        for sneakerElement in sneakersList:
+            sneakerElement['element'].click()
+            scrappingStatus = Pages.Sneaker.buySneaker(
+                sneakerElement['sneaker_id'])
+            if scrappingStatus != 'skipped':
+                driver.back()
+            random_sleep(2, 3)
+
 
     def restart_app(self):
         random_sleep(message='before restarting app')

@@ -23,3 +23,30 @@ class Commands:
     @classmethod
     def openSpendingAccount(cls):
         driver.find_element(By.XPATH, '//android.widget.ImageView[contains(@content-desc, "km")][1]/following-sibling::android.view.View[1]').click()
+    
+    @classmethod
+    def clickBaseButton(cls):
+        random_sleep(4, 5, message='before clicking on Base button')
+        BaseButtonList = driver.find_elements(
+                By.XPATH, '//android.view.View[@content-desc="Base"]')
+        if BaseButtonList:
+            BaseButtonList[0].click()
+        else:
+            random_sleep(8, 15, message='because sneaker is slow to load')
+            BaseButtonList = driver.find_elements(
+                By.XPATH, '//android.view.View[@content-desc="Base"]')
+            if BaseButtonList:
+                BaseButtonList[0].click()
+            else:
+                logger.warning('could not open sneaker, skipping')
+                return 'skipped'  
+
+    @classmethod
+    def FastClickBaseButton(cls):
+        BaseButtonList = driver.find_elements(
+                By.XPATH, '//android.view.View[@content-desc="Base"]')
+        if BaseButtonList:
+            BaseButtonList[0].click()
+        else:
+            logger.warning('could not open sneaker, skipping')
+            return 'skipped' 

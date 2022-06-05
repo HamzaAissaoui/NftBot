@@ -39,7 +39,16 @@ class MarketplacePage:
         random_sleep()
         sneakersList = driver.find_elements(
             By.XPATH, '//android.view.View[contains(@content-desc, "Walker")]')
-        return sneakersList
+        finalSneakers = []
+        for sneakerElement in sneakersList:
+            sneakerDescription = sneakerElement.get_attribute("content-desc")
+            sneakerID = cls.getSneakerId(sneakerDescription)
+            if cls.checkSneakerNotBought(sneakerID):
+                finalSneakers.append({'element':sneakerElement, 'sneaker_id': sneakerID})
+            else:
+                logger.warning('sneaker already bought')
+
+        return finalSneakers
 
 
     @classmethod
@@ -54,6 +63,12 @@ class MarketplacePage:
     def checkSneakerNonExistant(cls, sneakerId):
         with Session as session:
             return session.query(Sneaker.id).filter_by(
+                sneaker_id=sneakerId).first() is None
+
+    @classmethod
+    def checkSneakerNotBought(cls, sneakerId):
+        with Session as session:
+            return session.query(BoughtSneaker.id).filter_by(
                 sneaker_id=sneakerId).first() is None
 
     @classmethod
